@@ -10,6 +10,8 @@ needs a wrapper of your own.
 
 ## Install
 
+Requires PHP 8.4 and Laravel 13.
+
 ```bash
 composer require einvoicing/laravel
 php artisan vendor:publish --tag=einvoicing-config
