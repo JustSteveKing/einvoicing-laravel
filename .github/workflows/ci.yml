@@ -22,6 +22,11 @@ jobs:
       matrix:
         php: ['8.3', '8.4', '8.5']
         laravel: [12, 13]
+        exclude:
+          # laravel/framework 13 requires PHP ^8.4, whatever
+          # illuminate/contracts advertises.
+          - php: '8.3'
+            laravel: 13
         include:
           # Testbench tracks the framework two majors behind its own number.
           - laravel: 12
