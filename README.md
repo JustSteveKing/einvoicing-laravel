@@ -147,15 +147,29 @@ $fake->assertLookedUp('9932:GB123456789');
 $fake->assertNothingLookedUp();
 ```
 
-## Swapping the HTTP client
+## The HTTP client
 
-The package binds Guzzle as its PSR-18 client and PSR-17 factories, because
-that is what Laravel ships with. Bind any of the three yourself and yours is
-used instead:
+This package names no HTTP client. The SDK discovers the PSR-18 client and
+PSR-17 factories from whatever your application has installed, so there is
+nothing to configure.
+
+Most Laravel apps already have Guzzle, since that is what the `Http` facade
+uses. If yours does not, composer will tell you at install time — any PSR-18
+client and PSR-17 factories will do:
+
+```bash
+composer require guzzlehttp/guzzle
+```
+
+To supply your own — an instrumented client, a proxy, a different timeout —
+bind it in the container and it wins over discovery:
 
 ```php
 $this->app->bind(ClientInterface::class, fn () => new MyClient);
 ```
+
+The same goes for `RequestFactoryInterface` and `StreamFactoryInterface`. Bind
+one and the rest is still discovered.
 
 ## Errors
 

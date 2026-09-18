@@ -8,8 +8,6 @@ use Einvoicing\Client;
 use Einvoicing\Laravel\Commands\ParticipantCommand;
 use Einvoicing\Laravel\Commands\UsageCommand;
 use Einvoicing\Laravel\Commands\ValidateCommand;
-use GuzzleHttp\Client as Guzzle;
-use GuzzleHttp\Psr7\HttpFactory;
 use Illuminate\Contracts\Cache\Factory as CacheFactory;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Console\AboutCommand;
@@ -24,18 +22,19 @@ final class EinvoicingServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/einvoicing.php', 'einvoicing');
 
-        // Guzzle is what Laravel ships with, and it is both a PSR-18 client
-        // and a source of PSR-17 factories. Bind any of these three yourself
-        // and the package uses yours instead.
-        $this->app->bindIf(ClientInterface::class, static fn (): ClientInterface => new Guzzle);
-        $this->app->bindIf(RequestFactoryInterface::class, static fn (): RequestFactoryInterface => new HttpFactory);
-        $this->app->bindIf(StreamFactoryInterface::class, static fn (): StreamFactoryInterface => new HttpFactory);
-
+        // The container wins where it has an opinion; the SDK discovers the
+        // rest. Binding any of the three is the documented way to supply your
+        // own transport — an instrumented client, a fake — and a binding beats
+        // discovery because somebody chose it.
+        //
+        // Nothing is bound here, so this package names no HTTP client. Laravel
+        // does not ship one either: whatever the application installed is what
+        // gets found.
         $this->app->singleton(Client::class, static fn (Application $app): Client => new Client(
-            http: $app->make(ClientInterface::class),
-            requests: $app->make(RequestFactoryInterface::class),
-            streams: $app->make(StreamFactoryInterface::class),
             key: self::config($app, 'key') ?? '',
+            http: self::bound($app, ClientInterface::class),
+            requests: self::bound($app, RequestFactoryInterface::class),
+            streams: self::bound($app, StreamFactoryInterface::class),
             baseUrl: self::config($app, 'url') ?? 'https://api.einvoicing.dev',
         ));
 
@@ -83,6 +82,31 @@ final class EinvoicingServiceProvider extends ServiceProvider
     public function provides(): array
     {
         return [Client::class, Einvoicing::class, 'einvoicing'];
+    }
+
+    /**
+     * A container binding if there is one, null to let the SDK discover.
+     *
+     * Deliberately not `make()`: resolving an unbound interface would have
+     * Laravel try to instantiate it and fail, when "nobody chose one" is the
+     * ordinary case and discovery is the answer to it.
+     *
+     * @template T of object
+     *
+     * @param  class-string<T>  $abstract
+     * @return T|null
+     */
+    private static function bound(Application $app, string $abstract): ?object
+    {
+        if (! $app->bound($abstract)) {
+            return null;
+        }
+
+        $resolved = $app->make($abstract);
+
+        // A binding that resolves to something else is the application's bug,
+        // but discovering a working client beats a TypeError from in here.
+        return $resolved instanceof $abstract ? $resolved : null;
     }
 
     /**

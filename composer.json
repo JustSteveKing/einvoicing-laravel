@@ -20,12 +20,14 @@
     "require": {
         "php": "^8.3",
         "einvoicing/sdk": "^0.2",
-        "guzzlehttp/guzzle": "^7.9",
         "illuminate/console": "^12.0|^13.0",
         "illuminate/contracts": "^12.0|^13.0",
-        "illuminate/support": "^12.0|^13.0"
+        "illuminate/support": "^12.0|^13.0",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0"
     },
     "require-dev": {
+        "guzzlehttp/guzzle": "^7.9",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.18",
         "orchestra/testbench": "^10.0|^11.0",
@@ -86,5 +88,8 @@
         "issues": "https://github.com/JustSteveKing/einvoicing-laravel/issues",
         "source": "https://github.com/JustSteveKing/einvoicing-laravel",
         "docs": "https://www.einvoicing.dev/docs"
+    },
+    "suggest": {
+        "guzzlehttp/guzzle": "Any PSR-18 client and PSR-17 factories will do; this is the one most Laravel apps already have."
     }
 }
