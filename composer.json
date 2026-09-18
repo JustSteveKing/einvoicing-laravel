@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": "^8.3",
-        "einvoicing/sdk": "^0.1",
+        "einvoicing/sdk": "^0.2",
         "guzzlehttp/guzzle": "^7.9",
         "illuminate/console": "^12.0|^13.0",
         "illuminate/contracts": "^12.0|^13.0",
@@ -73,7 +73,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "einvoicing/sdk": "0.1.0"
+                    "einvoicing/sdk": "0.2.0"
                 }
             }
         },
