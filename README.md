@@ -154,8 +154,21 @@ PSR-17 factories from whatever your application has installed, so there is
 nothing to configure.
 
 Most Laravel apps already have Guzzle, since that is what the `Http` facade
-uses. If yours does not, composer will tell you at install time — any PSR-18
-client and PSR-17 factories will do:
+uses, and that is all discovery needs.
+
+If yours does not, nothing fails at install time — it throws
+`NoHttpClientException` on the first request instead. Either allow the
+discovery plugin, which installs a pair for you:
+
+```json
+{
+    "config": {
+        "allow-plugins": { "php-http/discovery": true }
+    }
+}
+```
+
+or install one yourself:
 
 ```bash
 composer require guzzlehttp/guzzle
