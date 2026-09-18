@@ -3,7 +3,7 @@
 Peppol e-invoicing for Laravel: validate, convert and look up documents with
 the [einvoicing.dev](https://www.einvoicing.dev) API.
 
-It wraps [einvoicing/sdk](https://github.com/einvoicing/sdk) in the things a
+It wraps [einvoicing/sdk](https://github.com/JustSteveKing/einvoicing-php) in the things a
 Laravel application already expects — a config file, a facade, a validation
 rule, Artisan commands, cached lookups and a testing fake — so nothing here
 needs a wrapper of your own.

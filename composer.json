@@ -76,6 +76,15 @@
                     "einvoicing/sdk": "0.1.0"
                 }
             }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/JustSteveKing/einvoicing-php"
         }
-    ]
+    ],
+    "support": {
+        "issues": "https://github.com/JustSteveKing/einvoicing-laravel/issues",
+        "source": "https://github.com/JustSteveKing/einvoicing-laravel",
+        "docs": "https://www.einvoicing.dev/docs"
+    }
 }
