@@ -24,7 +24,7 @@ final class UsageCommand extends Command
         $this->components->info("Plan: {$usage->plan} ({$usage->periodStart} to {$usage->periodEnd})");
 
         table(
-            headers: ['', 'Included', 'Used', 'Remaining'],
+            headers: ['', 'Included', 'Used', 'Remaining', 'Overage'],
             rows: [
                 $this->row('Documents', $usage->documents),
                 $this->row('Lookups', $usage->lookups),
@@ -41,7 +41,8 @@ final class UsageCommand extends Command
             $label,
             (string) $meter->included,
             sprintf('%d (%d%%)', $meter->used, (int) round($meter->fraction() * 100)),
-            (string) $meter->remaining,
+            (string) $meter->remaining(),
+            (string) $meter->overage,
         ];
     }
 }

@@ -44,7 +44,7 @@ it('caches a participant lookup', function (): void {
             'scheme' => '9932',
             'identifier' => 'gb123456789',
             'registered' => true,
-            'capabilities' => [['document_type' => 'Invoice-2::Invoice']],
+            'capabilities' => [['name' => 'Invoice', 'document_type_id' => 'Invoice-2::Invoice', 'process_id' => 'p']],
             'checked_at' => '2026-09-18T09:00:00.000Z',
         ]]),
     ]);
@@ -91,9 +91,9 @@ it('answers whether a participant can receive an invoice', function (): void {
     fakeTransport([
         json(['data' => [
             'registered' => true,
-            'capabilities' => [['document_type' => 'urn:…:Invoice-2::Invoice']],
+            'capabilities' => [['name' => 'Invoice', 'document_type_id' => 'urn:…:Invoice-2::Invoice', 'process_id' => 'p']],
         ]]),
-        json(['data' => ['registered' => true, 'capabilities' => [['document_type' => 'Order-2::Order']]]]),
+        json(['data' => ['registered' => true, 'capabilities' => [['name' => 'Order', 'document_type_id' => 'Order-2::Order', 'process_id' => 'p']]]]),
     ]);
 
     expect(Einvoicing::canReceive('9932:GB123456789'))->toBeTrue()

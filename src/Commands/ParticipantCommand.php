@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Einvoicing\Laravel\Commands;
 
 use Einvoicing\Laravel\Einvoicing;
+use Einvoicing\Responses\Capability;
 use Illuminate\Console\Command;
 
 use function Laravel\Prompts\table;
@@ -45,9 +46,9 @@ final class ParticipantCommand extends Command
         }
 
         table(
-            headers: ['Accepts'],
+            headers: ['Accepts', 'Document type'],
             rows: array_map(
-                static fn (array $capability): array => [implode(' ', array_filter($capability, 'is_string'))],
+                static fn (Capability $capability): array => [$capability->name, $capability->documentTypeId],
                 $participant->capabilities,
             ),
         );

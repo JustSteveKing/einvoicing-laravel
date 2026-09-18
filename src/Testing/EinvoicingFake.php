@@ -7,6 +7,7 @@ namespace Einvoicing\Laravel\Testing;
 use Closure;
 use Einvoicing\Client;
 use Einvoicing\Laravel\Einvoicing;
+use Einvoicing\Responses\Capability;
 use Einvoicing\Responses\Conversion;
 use Einvoicing\Responses\Finding;
 use Einvoicing\Responses\Participant;
@@ -94,7 +95,11 @@ final class EinvoicingFake extends Einvoicing
             identifier: str_contains($id, ':') ? mb_strtolower(explode(':', $id, 2)[1]) : mb_strtolower($id),
             registered: $registered,
             capabilities: array_map(
-                static fn (string $type): array => ['document_type' => $type],
+                static fn (string $type): Capability => new Capability(
+                    name: $type,
+                    documentTypeId: $type,
+                    processId: 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
+                ),
                 $registered ? $documentTypes : [],
             ),
             directory: null,

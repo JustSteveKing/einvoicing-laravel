@@ -55,7 +55,7 @@ it('lists what a participant accepts', function (): void {
     fakeTransport([json(['data' => [
         'id' => '9932:gb123456789',
         'registered' => true,
-        'capabilities' => [['document_type' => 'Invoice-2::Invoice']],
+        'capabilities' => [['name' => 'Peppol BIS Billing 3.0 Invoice', 'document_type_id' => 'Invoice-2::Invoice', 'process_id' => 'p']],
         'checked_at' => '2026-09-18T09:00:00.000Z',
     ]])]);
 
@@ -69,8 +69,8 @@ it('shows usage', function (): void {
         'plan' => 'developer',
         'period_start' => '2026-09-01T00:00:00.000Z',
         'period_end' => '2026-10-01T00:00:00.000Z',
-        'documents' => ['included' => 1000, 'used' => 250, 'remaining' => 750],
-        'lookups' => ['included' => 500, 'used' => 0, 'remaining' => 500],
+        'documents' => ['included' => 1000, 'used' => 250, 'overage' => 0],
+        'lookups' => ['included' => 500, 'used' => 0, 'overage' => 0],
     ]])]);
 
     runArtisan('einvoicing:usage')
