@@ -66,22 +66,6 @@
         "stan": "phpstan analyse",
         "lint": "pint"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../einvoicing-php",
-            "options": {
-                "symlink": true,
-                "versions": {
-                    "einvoicing/sdk": "0.2.3"
-                }
-            }
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/JustSteveKing/einvoicing-php"
-        }
-    ],
     "support": {
         "issues": "https://github.com/JustSteveKing/einvoicing-laravel/issues",
         "source": "https://github.com/JustSteveKing/einvoicing-laravel",
