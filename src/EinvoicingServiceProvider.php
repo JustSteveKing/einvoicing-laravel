@@ -12,9 +12,6 @@ use Illuminate\Contracts\Cache\Factory as CacheFactory;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\ServiceProvider;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
 final class EinvoicingServiceProvider extends ServiceProvider
 {
@@ -22,19 +19,16 @@ final class EinvoicingServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/einvoicing.php', 'einvoicing');
 
-        // The container wins where it has an opinion; the SDK discovers the
-        // rest. Binding any of the three is the documented way to supply your
-        // own transport — an instrumented client, a fake — and a binding beats
-        // discovery because somebody chose it.
+        // No HTTP wiring here at all. php-http/discovery finds the PSR-18
+        // client and PSR-17 factories from whatever the application installed,
+        // which is the same answer three container lookups would have reached
+        // more slowly.
         //
-        // Nothing is bound here, so this package names no HTTP client. Laravel
-        // does not ship one either: whatever the application installed is what
-        // gets found.
+        // To use your own transport, replace this binding rather than the
+        // pieces inside it: bind Einvoicing\Client and construct it with the
+        // client you want. One override point, and it is the whole object.
         $this->app->singleton(Client::class, static fn (Application $app): Client => new Client(
             key: self::config($app, 'key') ?? '',
-            http: self::bound($app, ClientInterface::class),
-            requests: self::bound($app, RequestFactoryInterface::class),
-            streams: self::bound($app, StreamFactoryInterface::class),
             baseUrl: self::config($app, 'url') ?? 'https://api.einvoicing.dev',
         ));
 
@@ -82,31 +76,6 @@ final class EinvoicingServiceProvider extends ServiceProvider
     public function provides(): array
     {
         return [Client::class, Einvoicing::class, 'einvoicing'];
-    }
-
-    /**
-     * A container binding if there is one, null to let the SDK discover.
-     *
-     * Deliberately not `make()`: resolving an unbound interface would have
-     * Laravel try to instantiate it and fail, when "nobody chose one" is the
-     * ordinary case and discovery is the answer to it.
-     *
-     * @template T of object
-     *
-     * @param  class-string<T>  $abstract
-     * @return T|null
-     */
-    private static function bound(Application $app, string $abstract): ?object
-    {
-        if (! $app->bound($abstract)) {
-            return null;
-        }
-
-        $resolved = $app->make($abstract);
-
-        // A binding that resolves to something else is the application's bug,
-        // but discovering a working client beats a TypeError from in here.
-        return $resolved instanceof $abstract ? $resolved : null;
     }
 
     /**

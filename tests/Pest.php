@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Einvoicing\Client;
 use Einvoicing\Laravel\Tests\TestCase;
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Handler\MockHandler;
@@ -11,15 +12,16 @@ use Illuminate\Testing\PendingCommand;
 
 use function Pest\Laravel\artisan;
 
-use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 
 uses(TestCase::class)->in('Feature', 'Unit');
 
 /**
- * Put a mock transport under the real container bindings, so a test exercises
- * the whole package — provider, manager, cache and SDK — and can still assert
- * on the requests that went out.
+ * Put a mock transport under the package by binding the SDK client itself.
+ *
+ * That is the same override point the README gives an application, so a test
+ * exercises the documented seam rather than one that only exists for tests.
+ * Everything above it — manager, cache, commands — is the real thing.
  *
  * @param  list<Response>  $responses
  * @return ArrayObject<int, RequestInterface>
@@ -42,8 +44,12 @@ function fakeTransport(array $responses): ArrayObject
         return $handler($request, $options);
     });
 
-    app()->instance(ClientInterface::class, new Guzzle(['handler' => $stack]));
-    app()->forgetInstance(Einvoicing\Client::class);
+    app()->instance(Client::class, new Client(
+        key: 'sk_test_example',
+        http: new Guzzle(['handler' => $stack]),
+    ));
+
+    // The manager caches the client it was built with, so it has to go.
     app()->forgetInstance(Einvoicing\Laravel\Einvoicing::class);
 
     return $history;

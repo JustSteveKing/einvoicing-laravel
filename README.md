@@ -178,14 +178,18 @@ nothing checks at that point — but the first request throws
 `NoHttpClientException`.
 
 To supply your own — an instrumented client, a proxy, a different timeout —
-bind it in the container and it wins over discovery:
+replace the whole client rather than the pieces inside it:
 
 ```php
-$this->app->bind(ClientInterface::class, fn () => new MyClient);
+$this->app->singleton(Einvoicing\Client::class, fn () => new Einvoicing\Client(
+    key: config('einvoicing.key'),
+    http: new MyClient,
+));
 ```
 
-The same goes for `RequestFactoryInterface` and `StreamFactoryInterface`. Bind
-one and the rest is still discovered.
+One override point, and it is the object the facade actually uses. Binding
+`ClientInterface` on its own does nothing here — discovery is the mechanism,
+not the container.
 
 ## Errors
 

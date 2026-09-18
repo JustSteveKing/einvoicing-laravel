@@ -22,9 +22,7 @@
         "einvoicing/sdk": "^0.2",
         "illuminate/console": "^12.0|^13.0",
         "illuminate/contracts": "^12.0|^13.0",
-        "illuminate/support": "^12.0|^13.0",
-        "psr/http-client": "^1.0",
-        "psr/http-factory": "^1.0"
+        "illuminate/support": "^12.0|^13.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^7.9",
