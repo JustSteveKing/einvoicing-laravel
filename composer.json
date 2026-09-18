@@ -1,0 +1,81 @@
+{
+    "name": "einvoicing/laravel",
+    "description": "Peppol e-invoicing for Laravel: validate, convert and look up documents with the einvoicing.dev API.",
+    "keywords": [
+        "laravel",
+        "peppol",
+        "e-invoicing",
+        "en16931",
+        "ubl",
+        "vat"
+    ],
+    "homepage": "https://www.einvoicing.dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Steve McDougall",
+            "homepage": "https://www.juststeveking.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "einvoicing/sdk": "^0.1",
+        "guzzlehttp/guzzle": "^7.9",
+        "illuminate/console": "^12.0|^13.0",
+        "illuminate/contracts": "^12.0|^13.0",
+        "illuminate/support": "^12.0|^13.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^3.5",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "phpstan/phpstan": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Einvoicing\\Laravel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Einvoicing\\Laravel\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Einvoicing\\Laravel\\EinvoicingServiceProvider"
+            ],
+            "aliases": {
+                "Einvoicing": "Einvoicing\\Laravel\\Facades\\Einvoicing"
+            }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "test": "pest",
+        "stan": "phpstan analyse",
+        "lint": "pint"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../einvoicing-php",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "einvoicing/sdk": "0.1.0"
+                }
+            }
+        }
+    ]
+}
