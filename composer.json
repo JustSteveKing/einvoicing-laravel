@@ -75,7 +75,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "einvoicing/sdk": "0.2.0"
+                    "einvoicing/sdk": "0.2.3"
                 }
             }
         },
