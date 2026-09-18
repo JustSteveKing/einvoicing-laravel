@@ -156,9 +156,8 @@ nothing to configure.
 Most Laravel apps already have Guzzle, since that is what the `Http` facade
 uses, and that is all discovery needs.
 
-If yours does not, nothing fails at install time — it throws
-`NoHttpClientException` on the first request instead. Either allow the
-discovery plugin, which installs a pair for you:
+If yours does not, allow the discovery plugin and composer installs a pair for
+you — it asks on install, and saying yes is enough:
 
 ```json
 {
@@ -173,6 +172,10 @@ or install one yourself:
 ```bash
 composer require guzzlehttp/guzzle
 ```
+
+Decline the plugin and install nothing, and the install still succeeds —
+nothing checks at that point — but the first request throws
+`NoHttpClientException`.
 
 To supply your own — an instrumented client, a proxy, a different timeout —
 bind it in the container and it wins over discovery:
